@@ -23,6 +23,13 @@ buttons.forEach(function(button) {
     // Store this answer's point value for THIS question.
     // Clicking a different answer replaces the old value instead of adding to it.
     scores[currentQuestion] = Number(button.dataset.value);
+
+    // Enable the right button depending on which question we're on
+    if (currentQuestion === questions.length - 1) {
+      showResultBtn.disabled = false;
+    } else {
+      nextBtn.disabled = false;
+    }
   });
 });
 
@@ -39,4 +46,27 @@ nextBtn.addEventListener("click", function() {
         nextBtn.classList.add("d-none");
         showResultBtn.classList.remove("d-none");
     }
+});
+
+// manages the show result button click, displaying the final result based on the total score
+showResultBtn.addEventListener("click", function() { 
+    let scoreTotal = 0;
+
+    scores.forEach(function(value) {
+        scoreTotal += value;
+    });
+    
+    // Find the first result that fits the total
+    if (scoreTotal <= 20) {
+      finalResult = { message: "You are a homebody!" };
+    } else if (scoreTotal <= 40) {
+      finalResult = { message: "You are an logician!" };
+    } else if (scoreTotal <= 60) {
+      finalResult = { message: "You are an entrepreneur!" };
+    } else if (scoreTotal > 60) { // I didn't make this an else for in case the answer values change in the future
+        finalResult = { message: "You are an explorer!" };
+    }
+
+    resultText.textContent = finalResult.message + " (Score: " + scoreTotal + ")";
+    resultContainer.style.display = "block";
 });
